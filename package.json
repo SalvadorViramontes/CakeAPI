@@ -1,0 +1,24 @@
+{
+  "name": "cakeapi",
+  "version": "1.0.0",
+  "description": "API for cake shop management",
+  "main": "server.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SalvadorViramontes/CakeAPI"
+  },
+  "keywords": [
+    "cake",
+    "crud",
+    "api",
+    "node"
+  ],
+  "author": "Salvador Viramontes",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  }
+}
