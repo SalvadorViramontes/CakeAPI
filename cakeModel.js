@@ -1,9 +1,11 @@
-class Cake{
-    constructor(name = "", price = "0.0", flavors = []) {
-        this.name = name;
-        this.price = price;
-        this.flavors = flavors;
-    }
-}
+var mongoose = require('mongoose');
+
+var cakeSchema = mongoose.Schema({
+    name: String,
+    price: Number,
+    flavors: [String]
+});
+
+var Cake = mongoose.model("Cake", cakeSchema);
 
 module.exports = Cake;

@@ -1,3 +1,5 @@
+var dotenv = require('dotenv')
+dotenv.config();
 var express = require('Express');
 var app = express();
 const bodyParser = require('body-parser');
@@ -11,8 +13,8 @@ app.use(function(err, req, res, next) {
     } else next();
 });
 
-var cakeController = require('./cakeRouter.js');
+var cakeRouter = require('./cakeRouter.js');
 
-app.use('/', cakeController);
+app.use('/', cakeRouter);
 
-app.listen(3000);
+app.listen(process.env.PORT);

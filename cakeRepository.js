@@ -1,46 +1,82 @@
+var mongoose = require('mongoose');
+mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true});
+const Cake = require('./cakeModel.js');
+
 class CakeRepository{
     constructor(){
-        this.cakeArray = [];
+        
     }
 
-    nameExists(name){
-        var cakeNames = this.cakeArray.map(cake => cake.name);
-        var cakeIndex = cakeNames.indexOf(name);
-        if (cakeIndex === -1) return false;
-        return true;
+    async nameExists(name){
+        var cakeExists = await this.getCakeByName(name);
+        if(cakeExists !== null) return true;
+        else return false;
     }
 
-    getAllCakes(){
-        return this.cakeArray;
+    async getAllCakes(){
+        var result;
+        try{
+            var query = await Cake.find({}, {'_id': 0, 'name': 1, 'price': 1, 'flavors': 1}).exec();
+            result = query;
+        }
+        catch(error){
+            throw new Error("A problem ocurred in the database.");
+        }
+        return result;
     }
 
-    getCakeByName(name){
-        var cakeNames = this.cakeArray.map(cake => cake.name);
-        var cakeIndex = cakeNames.indexOf(name);
-        if (cakeIndex === -1) return null;
-        else return this.cakeArray[cakeIndex];
+    async getCakeByName(name){
+        var result;
+        try{
+            var query = await Cake.findOne({ name: name }, {'_id': 0, 'name': 1, 'price': 1, 'flavors': 1});
+            result = query;
+        }
+        catch(error){
+            throw new Error("A problem ocurred in the database.");
+        }
+        return result;
     }
 
-    addNewCake(cake){
-        this.cakeArray.push(cake);
+    async addNewCake(cake){
+        var newCake = new Cake({
+            name: cake.name,
+            price: cake.price,
+            flavors: cake.flavors
+        });
+        var result;
+
+        try{
+            var query = await newCake.save();
+            result = query;
+        }
+        catch(error){
+            throw new Error("A problem ocurred in the database.");
+        }
+        return result;
     }
 
-    editCakeByName(name, newCake){
-        var cakeNames = this.cakeArray.map(cake => cake.name);
-        var cakeIndex = cakeNames.indexOf(name);
-        if (cakeIndex === -1) return false;
-        this.cakeArray[cakeIndex].name = newCake.name;
-        this.cakeArray[cakeIndex].price = newCake.price;
-        this.cakeArray[cakeIndex].flavors = newCake.flavors;
-        return true;
+    async editCakeByName(name, newCake){
+        var result;
+        try{
+            var query = await Cake.updateOne({ name: name }, newCake);
+            result = query;
+        }
+        catch(error){
+            throw new Error("A problem ocurred in the database.");
+        }
+        return result;
     }
 
-    deleteCakeByName(name){
-        var cakeNames = this.cakeArray.map(cake => cake.name);
-        var cakeIndex = cakeNames.indexOf(name);
-        if (cakeIndex === -1) return false;
-        this.cakeArray.splice(cakeIndex, 1);
-        return true;
+    async deleteCakeByName(name){
+        var result;
+        try{
+            var query = await Cake.deleteOne({ name: name });
+            result = query;
+        }
+        catch(error){
+            throw new Error("A problem ocurred in the database.");
+        }
+        return result;
     }
 }
 
